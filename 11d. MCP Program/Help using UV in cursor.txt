@@ -1,0 +1,11 @@
+Using UV in cursor
+pip install uv
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+& "$env:USERPROFILE\.local\bin\uv.exe" init
+
+& "$env:USERPROFILE\.local\bin\uv.exe" venv
+.venv\Scripts\activate
+
+& "$env:USERPROFILE\.local\bin\uv.exe" add -r Requirements.txt
+
+
