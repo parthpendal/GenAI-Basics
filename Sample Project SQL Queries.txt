@@ -1,0 +1,64 @@
+CREATE TABLE Policy (
+    PolicyNumber TEXT PRIMARY KEY,
+    OwnerName TEXT NOT NULL,
+    EffectiveDate DATE NOT NULL,
+    ExpiryDate DATE NOT NULL,
+    PolicyType TEXT,
+    PolicyTermDate DATE,
+    PolicyStatus TEXT,
+    TPAName TEXT CHECK (TPAName IN ('Quest','LabCorp','Aetna','Cigna'))
+);
+
+CREATE TABLE PolicyHistory (
+    HistoryID INTEGER PRIMARY KEY AUTOINCREMENT,
+    PolicyNumber TEXT NOT NULL,
+    OwnerName TEXT NOT NULL,
+    EffectiveDate DATE NOT NULL,
+    ExpiryDate DATE NOT NULL,
+    PolicyType TEXT,
+    PolicyTermDate DATE,
+    PolicyStatus TEXT,
+    TPAName TEXT,
+    SupersededDate DATE NOT NULL,
+    FOREIGN KEY (PolicyNumber) REFERENCES Policy(PolicyNumber)
+);
+
+CREATE TABLE Member (
+    MemberID TEXT PRIMARY KEY,
+    PolicyNumber TEXT NOT NULL,
+    FirstName TEXT NOT NULL,
+    LastName TEXT NOT NULL,
+    BirthDate DATE NOT NULL,
+    Address TEXT,
+    Relationship TEXT CHECK (Relationship IN ('Primary','Dependent')),
+    FOREIGN KEY (PolicyNumber) REFERENCES Policy(PolicyNumber)
+);
+
+CREATE TABLE MemberHistory (
+    HistoryID INTEGER PRIMARY KEY AUTOINCREMENT,
+    MemberID TEXT NOT NULL,
+    PolicyNumber TEXT NOT NULL,
+    FirstName TEXT NOT NULL,
+    LastName TEXT NOT NULL,
+    BirthDate DATE NOT NULL,
+    Address TEXT,
+    Relationship TEXT,
+    SupersededDate DATE NOT NULL,
+    FOREIGN KEY (MemberID) REFERENCES Member(MemberID)
+);
+
+CREATE TABLE QuestFeed (
+    FeedID INTEGER PRIMARY KEY AUTOINCREMENT,
+    PolicyNumber TEXT,
+    FirstName TEXT,
+    LastName TEXT,
+    Address TEXT,
+    BirthDate DATE,
+    EffectiveDate DATE,
+    ExpiryDate DATE,
+    FeedSentDate DATE
+);
+
+CREATE TABLE LabCorpFeed AS SELECT * FROM QuestFeed;
+CREATE TABLE AetnaFeed AS SELECT * FROM QuestFeed;
+CREATE TABLE CignaFeed AS SELECT * FROM QuestFeed;
